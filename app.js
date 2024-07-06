@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.route.js";
@@ -7,9 +7,11 @@ import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
+import serverless from "serverless-http";
 
 dotenv.config();
 console.log(process.env.MONGO);
+const router = Router();
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -50,3 +52,5 @@ app.use((err, req, res, next) => {
     message,
   });
 });
+api.use("/api/", router);
+module.exports.handler = serverless(app);
